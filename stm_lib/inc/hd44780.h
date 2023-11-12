@@ -11,6 +11,7 @@ PORTx7     14 - D7
 */
 #include <stm32f10x.h>
 #include <stm32f10x_gpio.h>
+
 #define LCD_PORT GPIOB
 #define RS  GPIO_Pin_3
 #define RW  GPIO_Pin_4

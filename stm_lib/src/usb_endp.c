@@ -103,8 +103,8 @@ void EP1_IN_Callback (void)
 *******************************************************************************/
 void EP3_OUT_Callback(void)
 {
-    uint16_t USB_Rx_Cnt;
-    USB_Rx_Cnt = USB_SIL_Read(EP3_OUT, USB_Rx_Buffer);
+//    uint16_t USB_Rx_Cnt;
+//    USB_Rx_Cnt = USB_SIL_Read(EP3_OUT, USB_Rx_Buffer);
   	state = USB_Rx_Buffer[0];
   	if(state == 0)
 	{

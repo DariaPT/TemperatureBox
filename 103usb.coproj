@@ -37,7 +37,7 @@
           <Memory name="IROM2" type="ReadOnly" size="" startValue=""/>
           <Memory name="IRAM2" type="ReadWrite" size="" startValue=""/>
         </MemoryAreas>
-        <LocateLinkFile path="d:/coocox/coide/configuration/programdata/103usb/arm-gcc-link.ld" type="0"/>
+        <LocateLinkFile path="c:/coocox/coide/configuration/programdata/103usb/link.ld" type="0"/>
       </Link>
       <Output>
         <Option name="OutputFileType" value="0"/>
@@ -89,8 +89,8 @@
   </Components>
   <Files>
     <File name="stm_lib/src/usb_desc.c" path="stm_lib/src/usb_desc.c" type="1"/>
-    <File name="stm_lib/src/usb_regs.c" path="stm_lib/src/usb_regs.c" type="1"/>
     <File name="stm_lib/inc/usb_istr.h" path="stm_lib/inc/usb_istr.h" type="1"/>
+    <File name="stm_lib/src/usb_regs.c" path="stm_lib/src/usb_regs.c" type="1"/>
     <File name="stm_lib/inc/stm32f10x_tim.h" path="stm_lib/inc/stm32f10x_tim.h" type="1"/>
     <File name="cmsis_boot" path="" type="2"/>
     <File name="stm_lib/src/usb_pwr.c" path="stm_lib/src/usb_pwr.c" type="1"/>
@@ -110,15 +110,15 @@
     <File name="stm_lib/inc/usb_int.h" path="stm_lib/inc/usb_int.h" type="1"/>
     <File name="syscalls/syscalls.c" path="syscalls/syscalls.c" type="1"/>
     <File name="stm_lib/inc/usb_mem.h" path="stm_lib/inc/usb_mem.h" type="1"/>
-    <File name="stm_lib/inc/usb_core.h" path="stm_lib/inc/usb_core.h" type="1"/>
     <File name="stm_lib/inc/platform_config.h" path="stm_lib/inc/platform_config.h" type="1"/>
+    <File name="stm_lib/inc/usb_core.h" path="stm_lib/inc/usb_core.h" type="1"/>
     <File name="stm_lib/src/stm32f10x_adc.c" path="stm_lib/src/stm32f10x_adc.c" type="1"/>
     <File name="stm_lib/inc/usb_type.h" path="stm_lib/inc/usb_type.h" type="1"/>
     <File name="stm_lib/src/system_stm32f10x.c" path="stm_lib/src/system_stm32f10x.c" type="1"/>
     <File name="stm_lib/inc/stm32_eval_legacy.h" path="stm_lib/inc/stm32_eval_legacy.h" type="1"/>
     <File name="stm_lib/src/usb_int.c" path="stm_lib/src/usb_int.c" type="1"/>
-    <File name="stm_lib/src/stm32f10x_usart.c" path="stm_lib/src/stm32f10x_usart.c" type="1"/>
     <File name="stm_lib/src/hd44780.c" path="stm_lib/src/hd44780.c" type="1"/>
+    <File name="stm_lib/src/stm32f10x_usart.c" path="stm_lib/src/stm32f10x_usart.c" type="1"/>
     <File name="stm_lib/inc/usb_prop.h" path="stm_lib/inc/usb_prop.h" type="1"/>
     <File name="stm_lib/src/stm32f10x_pwr.c" path="stm_lib/src/stm32f10x_pwr.c" type="1"/>
     <File name="cmsis_boot/startup/startup_stm32f10x_md.c" path="cmsis_boot/startup/startup_stm32f10x_md.c" type="1"/>
@@ -132,8 +132,8 @@
     <File name="stm_lib/src/usb_core.c" path="stm_lib/src/usb_core.c" type="1"/>
     <File name="cmsis/core_cm3.h" path="cmsis/core_cm3.h" type="1"/>
     <File name="stm_lib/inc/usb_init.h" path="stm_lib/inc/usb_init.h" type="1"/>
-    <File name="stm_lib/inc/usb_pwr.h" path="stm_lib/inc/usb_pwr.h" type="1"/>
     <File name="stm_lib/src/stm32f10x_exti.c" path="stm_lib/src/stm32f10x_exti.c" type="1"/>
+    <File name="stm_lib/inc/usb_pwr.h" path="stm_lib/inc/usb_pwr.h" type="1"/>
     <File name="stm_lib/src/stm32f10x_rcc.c" path="stm_lib/src/stm32f10x_rcc.c" type="1"/>
     <File name="stm_lib/inc/usb_conf.h" path="stm_lib/inc/usb_conf.h" type="1"/>
     <File name="stm_lib/inc/stm32_it.h" path="stm_lib/inc/stm32_it.h" type="1"/>
@@ -142,8 +142,8 @@
     <File name="stm_lib" path="" type="2"/>
     <File name="stm_lib/inc/stm32f10x_exti.h" path="stm_lib/inc/stm32f10x_exti.h" type="1"/>
     <File name="stm_lib/inc/stm32f10x_adc.h" path="stm_lib/inc/stm32f10x_adc.h" type="1"/>
-    <File name="stm_lib/inc/usb_sil.h" path="stm_lib/inc/usb_sil.h" type="1"/>
     <File name="cmsis_boot/system_stm32f10x.h" path="cmsis_boot/system_stm32f10x.h" type="1"/>
+    <File name="stm_lib/inc/usb_sil.h" path="stm_lib/inc/usb_sil.h" type="1"/>
     <File name="stm_lib/src/hw_config.c" path="stm_lib/src/hw_config.c" type="1"/>
     <File name="stm_lib/inc/stm32f10x_rcc.h" path="stm_lib/inc/stm32f10x_rcc.h" type="1"/>
     <File name="stm_lib/inc/stm32f10x_i2c.h" path="stm_lib/inc/stm32f10x_i2c.h" type="1"/>

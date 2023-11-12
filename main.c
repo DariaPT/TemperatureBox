@@ -75,7 +75,7 @@ static struct BMP280_cal_param_t
 
 ADC_InitTypeDef ADC_InitStructure;
 GPIO_InitTypeDef InitStruct;
-TIM_TimeBaseInitTypeDef timer;
+// TIM_TimeBaseInitTypeDef timer;
 uint16_t t = 0;
 
 uint8_t res = 0;

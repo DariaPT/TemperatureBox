@@ -247,3 +247,13 @@ int8_t bme280_get_temp_in_celcius()
 	return bme280_get_raw_temp() / 100;
 }
 
+int32_t get_remaped_value_for_zero_min_border(
+		int8_t curTempInCelc,
+		int8_t maxTempValue,
+		int32_t maxRemapValue)
+{
+	float coef = (float)maxRemapValue / maxTempValue;
+
+	return curTempInCelc * coef;
+}
+

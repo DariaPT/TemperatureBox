@@ -98,6 +98,7 @@
     <File name="stm_lib/inc/usb_regs.h" path="stm_lib/inc/usb_regs.h" type="1"/>
     <File name="stm_lib/inc/usb_lib.h" path="stm_lib/inc/usb_lib.h" type="1"/>
     <File name="stm_lib/inc/hw_config.h" path="stm_lib/inc/hw_config.h" type="1"/>
+    <File name="custom_libs/custom_pwm.h" path="custom_libs/custom_pwm.h" type="1"/>
     <File name="stm_lib/src/stm32f10x_tim.c" path="stm_lib/src/stm32f10x_tim.c" type="1"/>
     <File name="stm_lib/inc/stm32f10x_pwr.h" path="stm_lib/inc/stm32f10x_pwr.h" type="1"/>
     <File name="cmsis_boot/startup" path="" type="2"/>
@@ -112,8 +113,8 @@
     <File name="stm_lib/inc/usb_int.h" path="stm_lib/inc/usb_int.h" type="1"/>
     <File name="syscalls/syscalls.c" path="syscalls/syscalls.c" type="1"/>
     <File name="stm_lib/inc/usb_mem.h" path="stm_lib/inc/usb_mem.h" type="1"/>
-    <File name="stm_lib/src/stm32f10x_adc.c" path="stm_lib/src/stm32f10x_adc.c" type="1"/>
     <File name="stm_lib/inc/usb_core.h" path="stm_lib/inc/usb_core.h" type="1"/>
+    <File name="stm_lib/src/stm32f10x_adc.c" path="stm_lib/src/stm32f10x_adc.c" type="1"/>
     <File name="stm_lib/inc/platform_config.h" path="stm_lib/inc/platform_config.h" type="1"/>
     <File name="stm_lib/inc/usb_type.h" path="stm_lib/inc/usb_type.h" type="1"/>
     <File name="stm_lib/src/system_stm32f10x.c" path="stm_lib/src/system_stm32f10x.c" type="1"/>
@@ -124,6 +125,7 @@
     <File name="stm_lib/inc/usb_prop.h" path="stm_lib/inc/usb_prop.h" type="1"/>
     <File name="stm_lib/src/stm32f10x_pwr.c" path="stm_lib/src/stm32f10x_pwr.c" type="1"/>
     <File name="cmsis_boot/startup/startup_stm32f10x_md.c" path="cmsis_boot/startup/startup_stm32f10x_md.c" type="1"/>
+    <File name="custom_libs/custom_pwm.c" path="custom_libs/custom_pwm.c" type="1"/>
     <File name="stm_lib/src/stm32f10x_gpio.c" path="stm_lib/src/stm32f10x_gpio.c" type="1"/>
     <File name="stm_lib/inc/stm32f10x_gpio.h" path="stm_lib/inc/stm32f10x_gpio.h" type="1"/>
     <File name="stm_lib/inc/stm32f10x_usart.h" path="stm_lib/inc/stm32f10x_usart.h" type="1"/>

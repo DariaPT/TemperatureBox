@@ -9,5 +9,9 @@
 
 void bme280_init();
 int8_t bme280_get_temp_in_celcius();
+int32_t get_remaped_value_for_zero_min_border(
+		int8_t curTempInCelc,
+		int8_t maxTempValue,
+		int32_t maxRemapValue);
 
 #endif

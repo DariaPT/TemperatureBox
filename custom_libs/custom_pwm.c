@@ -21,8 +21,8 @@ void custom_pwm_init()
 	GPIO_Init(GPIOB, &port);
 
 	TIM_TimeBaseStructInit(&timer);
-	timer.TIM_Prescaler = 720; // 1 tick per 0.01 ms
-	timer.TIM_Period = 255;
+	timer.TIM_Prescaler = 7200; // 1 tick per 0.01 ms
+	timer.TIM_Period = 200;
 	TIM_TimeBaseInit(TIM3, &timer);
 
 	TIM_OCStructInit(&timerPWM);

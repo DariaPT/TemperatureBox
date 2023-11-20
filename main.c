@@ -27,6 +27,7 @@ GPIO_InitTypeDef InitStruct;
 
 void _delay_ms(uint32_t t)
 {
+	t = t * 7200;
 	while(t--){}
 }
 
@@ -66,8 +67,13 @@ void USB_Init_Function()
 
 int main(void)
 {
+	double T_st = 35;
+	double x = 0.0;
+	double  Error = 0.0;
+	double dt = 20;
+	double Kp = 500;
+	double Ki = 0;
 	USB_Init_Function();
-
     __enable_irq();
 
     bme280_init();
@@ -77,11 +83,18 @@ int main(void)
     while (1)
     {
     	int8_t currentTemperatureInCelcius = bme280_get_temp_in_celcius();
+    	x = (T_st - currentTemperatureInCelcius)/T_st;
+    	Error += x;
+    	double newPwmValue = Kp * x + Ki * dt * Error;
+    	if (newPwmValue < 0) newPwmValue = 0;
+    	if (newPwmValue > 200) newPwmValue= 190;
 
-    	uint8_t newPwmValue =
-    			get_remaped_value_for_zero_min_border(currentTemperatureInCelcius, 40, 255);
 
-    	CUSTOM_PWM_SET_NEW_VALUE(newPwmValue);
+    	//uint8_t newPwmValue =
+    	//		get_remaped_value_for_zero_min_border(currentTemperatureInCelcius, 40, 255);
+    	// = -25 * currentTemperatureInCelcius - 625;
+    	CUSTOM_PWM_SET_NEW_VALUE((int8_t)newPwmValue);
+
 
 //		for (int var = 0; var < 256; ++var)
 //		{
@@ -96,6 +109,6 @@ int main(void)
 //		}
 
     	USB_Send_Data(currentTemperatureInCelcius);
-    	_delay_ms(1000000);
+    	_delay_ms(40);
     }
 }

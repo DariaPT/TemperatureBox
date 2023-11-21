@@ -242,6 +242,11 @@ static int32_t bme280_get_raw_temp()
 	return bmp280_compensate_T_int32(rawTemp);
 }
 
+double bme280_get_float_temp()
+{
+	return (double)bme280_get_raw_temp() / 100;
+}
+
 int8_t bme280_get_temp_in_celcius()
 {
 	return bme280_get_raw_temp() / 100;

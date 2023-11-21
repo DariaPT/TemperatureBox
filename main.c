@@ -42,16 +42,14 @@ void send_bytes_array_to_usb(uint8_t *data, uint32_t dataSize)
 
 int usb_printf(char *format, ...)
 {
-	char printBuf[256] = { 0 };
-
 	va_list ap ;
 
 	va_start(ap, format); /* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) */
-
+	char printBuf[256] = { 0 };
 	vsprintf(printBuf, format, ap);
-	send_bytes_array_to_usb((uint8_t *)printBuf, strlen(printBuf));
-
 	va_end(ap);
+
+	send_bytes_array_to_usb((uint8_t *)printBuf, strlen(printBuf));
 
 	return 0;
 }
@@ -67,9 +65,10 @@ void USB_Init_Function()
 
 int main(void)
 {
-	double T_st = 50;
+	double T_st = 40;
 	double x = 0.0;
-	double  Error = 0.0;
+	double Error = 0.0;
+
 	double dt = 40;
 	double Kp = 4000; //4000 - колебания
 
@@ -83,33 +82,19 @@ int main(void)
 
     while (1)
     {
-    	int8_t currentTemperatureInCelcius = bme280_get_temp_in_celcius();
+    	double currentTemperatureInCelcius = bme280_get_float_temp();
+    	uint16_t currentTemperatureInCelciusX100 = currentTemperatureInCelcius * 100;
+
     	x = (T_st - currentTemperatureInCelcius)/T_st;
     	Error += x;
     	double newPwmValue = Kp * x + Ki * dt * Error;
     	if (newPwmValue < 0) newPwmValue = 0;
     	if (newPwmValue > 200) newPwmValue= 190;
 
+    	CUSTOM_PWM_SET_NEW_VALUE((uint8_t)newPwmValue);
 
-    	//uint8_t newPwmValue =
-    	//		get_remaped_value_for_zero_min_border(currentTemperatureInCelcius, 40, 255);
-    	// = -25 * currentTemperatureInCelcius - 625;
-    	CUSTOM_PWM_SET_NEW_VALUE((int8_t)newPwmValue);
+    	send_bytes_array_to_usb((uint8_t*)&currentTemperatureInCelciusX100, 2);
 
-
-//		for (int var = 0; var < 256; ++var)
-//		{
-//			CUSTOM_PWM_SET_NEW_VALUE(var);
-//			_delay_ms(10000);
-//		}
-//
-//		for (int var = 255; var >= 0; var--)
-//		{
-//			CUSTOM_PWM_SET_NEW_VALUE(var);
-//			_delay_ms(10000);
-//		}
-
-    	USB_Send_Data(currentTemperatureInCelcius);
-    	_delay_ms(40);
+    	_delay_ms(100);
     }
 }

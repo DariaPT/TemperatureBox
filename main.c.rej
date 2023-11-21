@@ -1,0 +1,15 @@
+diff a/main.c b/main.c	(rejected hunks)
+@@ -65,9 +65,11 @@
+ 
+ int main(void)
+ {
+-	double T_st = 50;
++	double T_st = 40;
+ 	double x = 0.0;
+-	double  Error = 0.0;
++	double Error = 0.0;
++//	double dt = 40;
++//	double Kp = 4000; //4000 - ���������
+ 	double dt = 40;
+ 	double Kp = 4000; //4000 - ���������
+ 

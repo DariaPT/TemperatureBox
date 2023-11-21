@@ -67,11 +67,12 @@ void USB_Init_Function()
 
 int main(void)
 {
-	double T_st = 35;
+	double T_st = 50;
 	double x = 0.0;
 	double  Error = 0.0;
-	double dt = 20;
-	double Kp = 500;
+	double dt = 40;
+	double Kp = 4000; //4000 - колебания
+
 	double Ki = 0;
 	USB_Init_Function();
     __enable_irq();

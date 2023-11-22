@@ -51,14 +51,13 @@ void USB_Init_Function()
 
 void TaskSensorPoller(void *pvParameters)
 {
-	double T_st = 40;
-	double x = 0.0;
-	double Error = 0.0;
+	const double Kp = 4000;
+	const double Kd = 0;
+	const double Ki = 50;
 
-	double dt = 40;
-	double Kp = 4000; //4000 - колебания
+	const double T_st = 50;
 
-	double Ki = 0;
+	double errorSum = 0.0;
 
     bme280_init();
 
@@ -69,13 +68,16 @@ void TaskSensorPoller(void *pvParameters)
 		double currentTemperatureInCelcius = bme280_get_float_temp();
 		uint16_t currentTemperatureInCelciusX100 = currentTemperatureInCelcius * 100;
 
-		x = (T_st - currentTemperatureInCelcius)/T_st;
-		Error += x;
-		double newPwmValue = Kp * x + Ki * dt * Error;
-		if (newPwmValue < 0) newPwmValue = 0;
-		if (newPwmValue > 200) newPwmValue= 190;
+		double currentError = T_st - currentTemperatureInCelcius;
+		errorSum += currentError;
+		double dError = (-1) * currentError;
 
-		CUSTOM_PWM_SET_NEW_VALUE((uint8_t)newPwmValue);
+		double newPwmValue = Kp * currentError + Kd * dError + Ki * errorSum;
+
+		if (newPwmValue < 0) newPwmValue = 0;
+		if (newPwmValue > 200) newPwmValue = 199;
+
+		CUSTOM_PWM_SET_NEW_VALUE((uint16_t)newPwmValue);
 
 		send_bytes_array_to_usb((uint8_t*)&currentTemperatureInCelciusX100, 2);
 

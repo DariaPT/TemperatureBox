@@ -26,6 +26,7 @@
 
 ADC_InitTypeDef ADC_InitStructure;
 GPIO_InitTypeDef InitStruct;
+xQueueHandle temperatureQueue;
 
 void _delay_ms(uint32_t t)
 {
@@ -51,6 +52,19 @@ void USB_Init_Function()
 
 void TaskSensorPoller(void *pvParameters)
 {
+	while(1)
+	{
+		double currentTemperatureInCelcius = bme280_get_float_temp();
+		uint16_t currentTemperatureInCelciusX100 = currentTemperatureInCelcius * 100;
+
+		xQueueSendToBack(temperatureQueue, (void *)&currentTemperatureInCelcius, 0);
+
+		vTaskDelay(100);
+	}
+}
+
+void PidRegulator(void *pvParameters)
+{
 	const double Kp = 4000;
 	const double Kd = 0;
 	const double Ki = 50;
@@ -59,16 +73,13 @@ void TaskSensorPoller(void *pvParameters)
 
 	double errorSum = 0.0;
 
-    bme280_init();
-
-    custom_pwm_init();
-
 	while(1)
 	{
-		double currentTemperatureInCelcius = bme280_get_float_temp();
-		uint16_t currentTemperatureInCelciusX100 = currentTemperatureInCelcius * 100;
-
-		double currentError = T_st - currentTemperatureInCelcius;
+		double newTemperatureInCelcius = 0;
+		//30 sec
+		xQueueReceive(temperatureQueue, &newTemperatureInCelcius, 30000);
+		/////////////
+		double currentError = T_st - newTemperatureInCelcius;
 		errorSum += currentError;
 		double dError = (-1) * currentError;
 
@@ -79,9 +90,9 @@ void TaskSensorPoller(void *pvParameters)
 
 		CUSTOM_PWM_SET_NEW_VALUE((uint16_t)newPwmValue);
 
-		send_bytes_array_to_usb((uint8_t*)&currentTemperatureInCelciusX100, 2);
+		uint16_t currentTemperatureInCelciusX100 = newTemperatureInCelcius * 100;
 
-		vTaskDelay(500);
+		send_bytes_array_to_usb((uint8_t*)&currentTemperatureInCelciusX100, 2);
 	}
 }
 int main(void)
@@ -89,9 +100,24 @@ int main(void)
 	USB_Init_Function();
     __enable_irq();
 
+
+    bme280_init();
+
+    custom_pwm_init();
+
+    temperatureQueue = xQueueCreate(1, sizeof(double));
+
     xTaskCreate(
     		TaskSensorPoller,
     		(signed char *) "TaskSensorPoller",
+    		configMINIMAL_STACK_SIZE,
+    		NULL,
+    		2,
+    		(TaskHandle_t *)NULL);
+
+    xTaskCreate(
+    		PidRegulator,
+    		(signed char *) "PidRegulator",
     		configMINIMAL_STACK_SIZE,
     		NULL,
     		2,

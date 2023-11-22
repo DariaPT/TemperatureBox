@@ -14,9 +14,11 @@
 
 #include "stm32f10x_tim.h"
 
-#include <stdarg.h>
-#include <stdio.h>
 #include <string.h>
+
+#include "FreeRTOS/Include/FreeRTOS.h"
+#include "FreeRTOS/Include/queue.h"
+#include "FreeRTOS/Include/task.h"
 
 #include "bme280.h"
 #include "custom_pwm.h"
@@ -39,22 +41,6 @@ void send_bytes_array_to_usb(uint8_t *data, uint32_t dataSize)
 	}
 }
 
-
-int usb_printf(char *format, ...)
-{
-	va_list ap ;
-
-	va_start(ap, format); /* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) */
-	char printBuf[256] = { 0 };
-	vsprintf(printBuf, format, ap);
-	va_end(ap);
-
-	send_bytes_array_to_usb((uint8_t *)printBuf, strlen(printBuf));
-
-	return 0;
-}
-
-
 void USB_Init_Function()
 {
     Set_System();
@@ -63,7 +49,7 @@ void USB_Init_Function()
     USB_Init();
 }
 
-int main(void)
+void TaskSensorPoller(void *pvParameters)
 {
 	double T_st = 40;
 	double x = 0.0;
@@ -73,28 +59,51 @@ int main(void)
 	double Kp = 4000; //4000 - колебания
 
 	double Ki = 0;
-	USB_Init_Function();
-    __enable_irq();
 
     bme280_init();
 
     custom_pwm_init();
 
+	while(1)
+	{
+		double currentTemperatureInCelcius = bme280_get_float_temp();
+		uint16_t currentTemperatureInCelciusX100 = currentTemperatureInCelcius * 100;
+
+		x = (T_st - currentTemperatureInCelcius)/T_st;
+		Error += x;
+		double newPwmValue = Kp * x + Ki * dt * Error;
+		if (newPwmValue < 0) newPwmValue = 0;
+		if (newPwmValue > 200) newPwmValue= 190;
+
+		CUSTOM_PWM_SET_NEW_VALUE((uint8_t)newPwmValue);
+
+		send_bytes_array_to_usb((uint8_t*)&currentTemperatureInCelciusX100, 2);
+
+		vTaskDelay(500);
+	}
+}
+int main(void)
+{
+	USB_Init_Function();
+    __enable_irq();
+
+    xTaskCreate(
+    		TaskSensorPoller,
+    		(signed char *) "TaskSensorPoller",
+    		configMINIMAL_STACK_SIZE,
+    		NULL,
+    		2,
+    		(TaskHandle_t *)NULL);
+
+    vTaskStartScheduler();
+
     while (1)
     {
-    	double currentTemperatureInCelcius = bme280_get_float_temp();
-    	uint16_t currentTemperatureInCelciusX100 = currentTemperatureInCelcius * 100;
 
-    	x = (T_st - currentTemperatureInCelcius)/T_st;
-    	Error += x;
-    	double newPwmValue = Kp * x + Ki * dt * Error;
-    	if (newPwmValue < 0) newPwmValue = 0;
-    	if (newPwmValue > 200) newPwmValue= 190;
-
-    	CUSTOM_PWM_SET_NEW_VALUE((uint8_t)newPwmValue);
-
-    	send_bytes_array_to_usb((uint8_t*)&currentTemperatureInCelciusX100, 2);
-
-    	_delay_ms(100);
     }
+}
+
+void vApplicationTickHook(void)
+{
+
 }

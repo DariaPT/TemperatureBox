@@ -67,9 +67,9 @@ void PidRegulator(void *pvParameters)
 {
 	const double T_st = 50;
 
-	const double Kp = 100;
+	const double Kp = 105; // 108 XENM PF[JLBN
 	const double Kd = 0;
-	const double Ki = 0;
+	const double Ki = 0.1;
 
 	double I_prev = 0;
 	double prevError = 0;

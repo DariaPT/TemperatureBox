@@ -112,12 +112,12 @@
     <File name="stm_lib/src/usb_int.c" path="stm_lib/src/usb_int.c" type="1"/>
     <File name="stm_lib/src/hd44780.c" path="stm_lib/src/hd44780.c" type="1"/>
     <File name="FreeRTOS/Source/list.c" path="FreeRTOS/Source/list.c" type="1"/>
-    <File name="FreeRTOS/Source/timers.c" path="FreeRTOS/Source/timers.c" type="1"/>
     <File name="stm_lib/inc/usb_prop.h" path="stm_lib/inc/usb_prop.h" type="1"/>
+    <File name="FreeRTOS/Source/timers.c" path="FreeRTOS/Source/timers.c" type="1"/>
     <File name="cmsis_boot/startup/startup_stm32f10x_md.c" path="cmsis_boot/startup/startup_stm32f10x_md.c" type="1"/>
     <File name="stm_lib/src/stm32f10x_gpio.c" path="stm_lib/src/stm32f10x_gpio.c" type="1"/>
-    <File name="FreeRTOS/Include/message_buffer.h" path="FreeRTOS/Include/message_buffer.h" type="1"/>
     <File name="stm_lib/inc/stm32f10x_usart.h" path="stm_lib/inc/stm32f10x_usart.h" type="1"/>
+    <File name="FreeRTOS/Include/message_buffer.h" path="FreeRTOS/Include/message_buffer.h" type="1"/>
     <File name="stm_lib/inc/stm32f10x_conf.h" path="stm_lib/inc/stm32f10x_conf.h" type="1"/>
     <File name="stm_lib/inc/usb_def.h" path="stm_lib/inc/usb_def.h" type="1"/>
     <File name="stm_lib/inc/misc.h" path="stm_lib/inc/misc.h" type="1"/>
@@ -126,9 +126,9 @@
     <File name="stm_lib/src/stm32f10x_rcc.c" path="stm_lib/src/stm32f10x_rcc.c" type="1"/>
     <File name="FreeRTOS/Portable" path="" type="2"/>
     <File name="stm_lib/inc/usb_conf.h" path="stm_lib/inc/usb_conf.h" type="1"/>
-    <File name="FreeRTOS/Portable/portmacro.h" path="FreeRTOS/Portable/portmacro.h" type="1"/>
     <File name="custom_libs/bme280.c" path="custom_libs/bme280.c" type="1"/>
     <File name="stm_lib/src" path="" type="2"/>
+    <File name="FreeRTOS/Portable/portmacro.h" path="FreeRTOS/Portable/portmacro.h" type="1"/>
     <File name="cmsis" path="" type="2"/>
     <File name="stm_lib" path="" type="2"/>
     <File name="stm_lib/inc/stm32f10x_exti.h" path="stm_lib/inc/stm32f10x_exti.h" type="1"/>
@@ -140,8 +140,8 @@
     <File name="custom_libs/bme280.h" path="custom_libs/bme280.h" type="1"/>
     <File name="stm_lib/src/stm32_it.c" path="stm_lib/src/stm32_it.c" type="1"/>
     <File name="FreeRTOS/Source/heap_2.c" path="FreeRTOS/Source/heap_2.c" type="1"/>
-    <File name="stm_lib/src/usb_sil.c" path="stm_lib/src/usb_sil.c" type="1"/>
     <File name="main.c" path="main.c" type="1"/>
+    <File name="stm_lib/src/usb_sil.c" path="stm_lib/src/usb_sil.c" type="1"/>
     <File name="FreeRTOS/Include/queue.h" path="FreeRTOS/Include/queue.h" type="1"/>
     <File name="FreeRTOS/Include/timers.h" path="FreeRTOS/Include/timers.h" type="1"/>
     <File name="stm_lib/src/usb_desc.c" path="stm_lib/src/usb_desc.c" type="1"/>
@@ -149,8 +149,8 @@
     <File name="FreeRTOS/Source/queue.c" path="FreeRTOS/Source/queue.c" type="1"/>
     <File name="stm_lib/inc/stm32f10x_tim.h" path="stm_lib/inc/stm32f10x_tim.h" type="1"/>
     <File name="cmsis_boot" path="" type="2"/>
-    <File name="stm_lib/inc/usb_regs.h" path="stm_lib/inc/usb_regs.h" type="1"/>
     <File name="stm_lib/inc/usb_lib.h" path="stm_lib/inc/usb_lib.h" type="1"/>
+    <File name="stm_lib/inc/usb_regs.h" path="stm_lib/inc/usb_regs.h" type="1"/>
     <File name="custom_libs/custom_pwm.h" path="custom_libs/custom_pwm.h" type="1"/>
     <File name="stm_lib/src/stm32f10x_tim.c" path="stm_lib/src/stm32f10x_tim.c" type="1"/>
     <File name="cmsis_boot/startup" path="" type="2"/>
@@ -161,18 +161,18 @@
     <File name="FreeRTOS/Portable/port.c" path="FreeRTOS/Portable/port.c" type="1"/>
     <File name="FreeRTOS/Include" path="" type="2"/>
     <File name="stm_lib/inc/usb_mem.h" path="stm_lib/inc/usb_mem.h" type="1"/>
+    <File name="stm_lib/inc/usb_core.h" path="stm_lib/inc/usb_core.h" type="1"/>
     <File name="FreeRTOS/Include/FreeRTOSConfig.h" path="FreeRTOS/Include/FreeRTOSConfig.h" type="1"/>
     <File name="stm_lib/inc/platform_config.h" path="stm_lib/inc/platform_config.h" type="1"/>
-    <File name="stm_lib/inc/usb_core.h" path="stm_lib/inc/usb_core.h" type="1"/>
     <File name="stm_lib/inc/usb_type.h" path="stm_lib/inc/usb_type.h" type="1"/>
     <File name="FreeRTOS/Include/stack_macros.h" path="FreeRTOS/Include/stack_macros.h" type="1"/>
-    <File name="stm_lib/src/system_stm32f10x.c" path="stm_lib/src/system_stm32f10x.c" type="1"/>
     <File name="stm_lib/inc/stm32_eval_legacy.h" path="stm_lib/inc/stm32_eval_legacy.h" type="1"/>
+    <File name="stm_lib/src/system_stm32f10x.c" path="stm_lib/src/system_stm32f10x.c" type="1"/>
     <File name="stm_lib/src/stm32f10x_usart.c" path="stm_lib/src/stm32f10x_usart.c" type="1"/>
-    <File name="FreeRTOS/Source" path="" type="2"/>
-    <File name="FreeRTOS/Include/StackMacros.h" path="FreeRTOS/Include/StackMacros.h" type="1"/>
-    <File name="custom_libs/custom_pwm.c" path="custom_libs/custom_pwm.c" type="1"/>
     <File name="stm_lib/src/stm32f10x_pwr.c" path="stm_lib/src/stm32f10x_pwr.c" type="1"/>
+    <File name="FreeRTOS/Include/StackMacros.h" path="FreeRTOS/Include/StackMacros.h" type="1"/>
+    <File name="FreeRTOS/Source" path="" type="2"/>
+    <File name="custom_libs/custom_pwm.c" path="custom_libs/custom_pwm.c" type="1"/>
     <File name="stm_lib/inc/stm32f10x_gpio.h" path="stm_lib/inc/stm32f10x_gpio.h" type="1"/>
     <File name="FreeRTOS/Include/event_groups.h" path="FreeRTOS/Include/event_groups.h" type="1"/>
     <File name="FreeRTOS/Include/task.h" path="FreeRTOS/Include/task.h" type="1"/>
@@ -188,8 +188,8 @@
     <File name="syscalls" path="" type="2"/>
     <File name="FreeRTOS/Include/mpu_prototypes.h" path="FreeRTOS/Include/mpu_prototypes.h" type="1"/>
     <File name="FreeRTOS/Include/list.h" path="FreeRTOS/Include/list.h" type="1"/>
-    <File name="FreeRTOS/Source/event_groups.c" path="FreeRTOS/Source/event_groups.c" type="1"/>
     <File name="stm_lib/src/usb_init.c" path="stm_lib/src/usb_init.c" type="1"/>
+    <File name="FreeRTOS/Source/event_groups.c" path="FreeRTOS/Source/event_groups.c" type="1"/>
     <File name="stm_lib/src/usb_mem.c" path="stm_lib/src/usb_mem.c" type="1"/>
     <File name="stm_lib/inc" path="" type="2"/>
     <File name="FreeRTOS" path="" type="2"/>

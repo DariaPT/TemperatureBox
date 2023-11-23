@@ -65,30 +65,35 @@ void TaskSensorPoller(void *pvParameters)
 
 void PidRegulator(void *pvParameters)
 {
-	const double Kp = 4000;
-	const double Kd = 0;
-	const double Ki = 50;
-
 	const double T_st = 50;
 
-	double errorSum = 0.0;
+	const double Kp = 100;
+	const double Kd = 0;
+	const double Ki = 0;
+
+	double I_prev = 0;
+	double prevError = 0;
 
 	while(1)
 	{
 		double newTemperatureInCelcius = 0;
-		//30 sec
-		xQueueReceive(temperatureQueue, &newTemperatureInCelcius, 30000);
-		/////////////
+
+		xQueueReceive(temperatureQueue, &newTemperatureInCelcius, portMAX_DELAY );
+
 		double currentError = T_st - newTemperatureInCelcius;
-		errorSum += currentError;
-		double dError = (-1) * currentError;
 
-		double newPwmValue = Kp * currentError + Kd * dError + Ki * errorSum;
+		double P_part = Kp * currentError;
+		double I_part = I_prev + Ki * currentError;
+		double D_part = Kd * (currentError - prevError);
 
+		double newPwmValue = P_part + I_part + D_part;
 		if (newPwmValue < 0) newPwmValue = 0;
 		if (newPwmValue > 200) newPwmValue = 199;
 
 		CUSTOM_PWM_SET_NEW_VALUE((uint16_t)newPwmValue);
+
+		prevError = currentError;
+		I_prev = I_part;
 
 		uint16_t currentTemperatureInCelciusX100 = newTemperatureInCelcius * 100;
 

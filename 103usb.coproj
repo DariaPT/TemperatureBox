@@ -161,18 +161,18 @@
     <File name="FreeRTOS/Portable/port.c" path="FreeRTOS/Portable/port.c" type="1"/>
     <File name="FreeRTOS/Include" path="" type="2"/>
     <File name="stm_lib/inc/usb_mem.h" path="stm_lib/inc/usb_mem.h" type="1"/>
+    <File name="FreeRTOS/Include/FreeRTOSConfig.h" path="FreeRTOS/Include/FreeRTOSConfig.h" type="1"/>
     <File name="stm_lib/inc/platform_config.h" path="stm_lib/inc/platform_config.h" type="1"/>
     <File name="stm_lib/inc/usb_core.h" path="stm_lib/inc/usb_core.h" type="1"/>
-    <File name="FreeRTOS/Include/FreeRTOSConfig.h" path="FreeRTOS/Include/FreeRTOSConfig.h" type="1"/>
     <File name="stm_lib/inc/usb_type.h" path="stm_lib/inc/usb_type.h" type="1"/>
     <File name="FreeRTOS/Include/stack_macros.h" path="FreeRTOS/Include/stack_macros.h" type="1"/>
     <File name="stm_lib/src/system_stm32f10x.c" path="stm_lib/src/system_stm32f10x.c" type="1"/>
     <File name="stm_lib/inc/stm32_eval_legacy.h" path="stm_lib/inc/stm32_eval_legacy.h" type="1"/>
     <File name="stm_lib/src/stm32f10x_usart.c" path="stm_lib/src/stm32f10x_usart.c" type="1"/>
-    <File name="custom_libs/custom_pwm.c" path="custom_libs/custom_pwm.c" type="1"/>
-    <File name="stm_lib/src/stm32f10x_pwr.c" path="stm_lib/src/stm32f10x_pwr.c" type="1"/>
-    <File name="FreeRTOS/Source" path="" type="2"/>
     <File name="FreeRTOS/Include/StackMacros.h" path="FreeRTOS/Include/StackMacros.h" type="1"/>
+    <File name="custom_libs/custom_pwm.c" path="custom_libs/custom_pwm.c" type="1"/>
+    <File name="FreeRTOS/Source" path="" type="2"/>
+    <File name="stm_lib/src/stm32f10x_pwr.c" path="stm_lib/src/stm32f10x_pwr.c" type="1"/>
     <File name="stm_lib/inc/stm32f10x_gpio.h" path="stm_lib/inc/stm32f10x_gpio.h" type="1"/>
     <File name="FreeRTOS/Include/event_groups.h" path="FreeRTOS/Include/event_groups.h" type="1"/>
     <File name="FreeRTOS/Include/task.h" path="FreeRTOS/Include/task.h" type="1"/>

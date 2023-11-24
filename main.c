@@ -54,7 +54,7 @@ void TaskSensorPoller(void *pvParameters)
 {
 	while(1)
 	{
-		double currentTemperatureInCelcius = bme280_get_float_temp();
+		double currentTemperatureInCelcius = bmp280_get_float_temp();
 		uint16_t currentTemperatureInCelciusX100 = currentTemperatureInCelcius * 100;
 
 		xQueueSendToBack(temperatureQueue, (void *)&currentTemperatureInCelcius, 0);
@@ -66,26 +66,20 @@ void TaskSensorPoller(void *pvParameters)
 void PidRegulator(void *pvParameters)
 {
 	const double T_st = 50;
-
 	const double Kp = 105; // 108 XENM PF[JLBN
 	const double Kd = 0;
-	const double Ki = 0.1;
-
+	const double Ki = 0.2;
 	double I_prev = 0;
 	double prevError = 0;
 
 	while(1)
 	{
 		double newTemperatureInCelcius = 0;
-
 		xQueueReceive(temperatureQueue, &newTemperatureInCelcius, portMAX_DELAY );
-
 		double currentError = T_st - newTemperatureInCelcius;
-
 		double P_part = Kp * currentError;
 		double I_part = I_prev + Ki * currentError;
 		double D_part = Kd * (currentError - prevError);
-
 		double newPwmValue = P_part + I_part + D_part;
 		if (newPwmValue < 0) newPwmValue = 0;
 		if (newPwmValue > 200) newPwmValue = 199;
@@ -94,22 +88,17 @@ void PidRegulator(void *pvParameters)
 
 		prevError = currentError;
 		I_prev = I_part;
-
 		uint16_t currentTemperatureInCelciusX100 = newTemperatureInCelcius * 100;
-
 		send_bytes_array_to_usb((uint8_t*)&currentTemperatureInCelciusX100, 2);
 	}
 }
+
 int main(void)
 {
 	USB_Init_Function();
     __enable_irq();
-
-
-    bme280_init();
-
+    bmp280_init();
     custom_pwm_init();
-
     temperatureQueue = xQueueCreate(1, sizeof(double));
 
     xTaskCreate(
@@ -119,7 +108,6 @@ int main(void)
     		NULL,
     		2,
     		(TaskHandle_t *)NULL);
-
     xTaskCreate(
     		PidRegulator,
     		(signed char *) "PidRegulator",
@@ -127,7 +115,6 @@ int main(void)
     		NULL,
     		2,
     		(TaskHandle_t *)NULL);
-
     vTaskStartScheduler();
 
     while (1)

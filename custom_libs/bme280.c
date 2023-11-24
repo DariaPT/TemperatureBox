@@ -211,7 +211,7 @@ static bool bmp_20_reset(void)
 	return 0;
 }
 
-void bme280_init()
+void bmp280_init()
 {
     I2C1_Init();
 
@@ -242,7 +242,7 @@ static int32_t bme280_get_raw_temp()
 	return bmp280_compensate_T_int32(rawTemp);
 }
 
-double bme280_get_float_temp()
+double bmp280_get_float_temp()
 {
 	return (double)bme280_get_raw_temp() / 100;
 }

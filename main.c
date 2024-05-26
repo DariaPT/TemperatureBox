@@ -20,8 +20,14 @@
 #include "FreeRTOS/Include/queue.h"
 #include "FreeRTOS/Include/task.h"
 
-#include "bme280.h"
 #include "custom_pwm.h"
+
+#define USE_DHT_SENSOR 1
+#if USE_DHT_SENSOR == 1
+#include "dh11_driver.h"
+#else
+#include "bme280.h"
+#endif
 
 
 ADC_InitTypeDef ADC_InitStructure;
@@ -52,10 +58,17 @@ void USB_Init_Function()
 
 void TaskSensorPoller(void *pvParameters)
 {
+	u8 Rh,RhDec,Temp,TempDec,ChkSum;
+
 	while(1)
 	{
+#if USE_DHT_SENSOR == 1
+		DHT11Read(&Rh,&RhDec,&Temp,&TempDec,&ChkSum);
+		double currentTemperatureInCelcius = (double)Temp;
+#else
 		double currentTemperatureInCelcius = bmp280_get_float_temp();
-		uint16_t currentTemperatureInCelciusX100 = currentTemperatureInCelcius * 100;
+#endif
+
 
 		xQueueSendToBack(temperatureQueue, (void *)&currentTemperatureInCelcius, 0);
 
@@ -97,7 +110,12 @@ int main(void)
 {
 	USB_Init_Function();
     __enable_irq();
-    bmp280_init();
+
+#if USE_DHT_SENSOR == 1
+	DHT11initTIM2();
+#else
+	    bmp280_init();
+#endif
     custom_pwm_init();
     temperatureQueue = xQueueCreate(1, sizeof(double));
 

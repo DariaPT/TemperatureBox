@@ -16,13 +16,13 @@
 #define GPIO_RCC	RCC_APB2Periph_GPIOA
 
 GPIO_InitTypeDef  GPIO_InitStructure;
-TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure = { 0 };
+TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 
-void DHT11initTIM2(void)
-{
+void DHT11initTIM2(void){
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
-	TIM_TimeBaseStructure.TIM_Period = 65535;//1us
-	TIM_TimeBaseStructure.TIM_Prescaler = 71;		//1us counter
+
+	TIM_TimeBaseStructure.TIM_Period = 72000000-1;//1us
+	TIM_TimeBaseStructure.TIM_Prescaler = 72 - 1;		//1us counter
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
 	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
@@ -32,7 +32,7 @@ void DHT11initTIM2(void)
 void DHT11initGPIOasOutput(void){
 
 	 /* GPIOD Periph clock enable */
-	RCC_APB1PeriphClockCmd(GPIO_RCC, ENABLE);
+	RCC_APB2PeriphClockCmd(GPIO_RCC, ENABLE);
 
 	/* Configure PD12, PD13, PD14 and PD15 in output pushpull mode */
 	GPIO_InitStructure.GPIO_Pin = GPIO_PIN;
@@ -46,10 +46,11 @@ void DHT11initGPIOasOutput(void){
 void DHT11initGPIOasInput(void){
 
 	 /* GPIOD Periph clock enable */
-	RCC_APB1PeriphClockCmd(GPIO_RCC, ENABLE);
+	RCC_APB2PeriphClockCmd(GPIO_RCC, ENABLE);
 	GPIO_InitStructure.GPIO_Pin = GPIO_PIN;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_Init(GPIO_PORT, &GPIO_InitStructure);
+
 }
 
 
@@ -90,7 +91,6 @@ double dewPointFast(double celsius, double humidity)
 
 void DHT11Read(u8 *Rh,u8 *RhDec,u8 *Temp,u8 *TempDec, u8 *ChkSum)
 {
-	DHT11_delay_us(5000000);
 	u8 temp;
 	u8 j;
 	u8 i;

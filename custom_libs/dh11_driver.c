@@ -86,8 +86,53 @@ double dewPointFast(double celsius, double humidity)
       return  (b * temp) / (a - temp);;
 }
 
+uint8_t DHT22_Check_Response (void)
+{
+	DHT11initGPIOasInput();   // set as input
 
+	uint8_t Response = 0;
+	DHT11_delay_us(40);  // wait for 40us
+	if (!GPIO_ReadInputDataBit(GPIO_PORT,GPIO_PIN)) // if the pin is low
+	{
+		DHT11_delay_us(80);   // wait for 80us
 
+		if (GPIO_ReadInputDataBit(GPIO_PORT,GPIO_PIN)) Response = 1;  // if the pin is high, response is ok
+		else Response = -1;
+	}
+
+	while (GPIO_ReadInputDataBit(GPIO_PORT,GPIO_PIN));   // wait for the pin to go low
+	return Response;
+}
+
+uint8_t DHT22_Read (void)
+{
+	uint8_t i,j;
+	for (j=0;j<8;j++)
+	{
+		while (!GPIO_ReadInputDataBit(GPIO_PORT,GPIO_PIN));   // wait for the pin to go high
+		DHT11_delay_us(40);   // wait for 40 us
+
+		if (!GPIO_ReadInputDataBit(GPIO_PORT,GPIO_PIN))   // if the pin is low
+		{
+			i&= ~(1<<(7-j));   // write 0
+		}
+		else i|= (1<<(7-j));  // if the pin is high, write 1
+		while (GPIO_ReadInputDataBit(GPIO_PORT,GPIO_PIN));  // wait for the pin to go low
+	}
+
+	return i;
+}
+
+void DHT22_Start (void)
+{
+	DHT11initGPIOasOutput(); // set the pin as output
+	GPIO_ResetBits(GPIO_PORT,GPIO_PIN); // pull the pin low
+	DHT11_delay_us(1200);   // wait for > 1ms
+	GPIO_SetBits(GPIO_PORT,GPIO_PIN);// pull the pin high
+	DHT11_delay_us(20);   // wait for 30us
+
+	DHT11initGPIOasInput();   // set as input
+}
 
 void DHT11Read(u8 *Rh,u8 *RhDec,u8 *Temp,u8 *TempDec, u8 *ChkSum)
 {

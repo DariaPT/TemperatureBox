@@ -22,8 +22,10 @@
 
 #include "custom_pwm.h"
 
-#define USE_DHT_SENSOR 1
-#if USE_DHT_SENSOR == 1
+#define USE_DHT22_SENSOR 1
+#define USE_DHT11_SENSOR 0
+
+#if USE_DHT22_SENSOR == 1 || USE_DHT11_SENSOR == 1
 #include "dh11_driver.h"
 #else
 #include "bme280.h"
@@ -60,11 +62,28 @@ void TaskSensorPoller(void *pvParameters)
 {
 	u8 Rh,RhDec,Temp,TempDec,ChkSum;
 
+	uint8_t Rh_byte1, Rh_byte2, Temp_byte1, Temp_byte2;
+
+	uint16_t temperatureU16;
+	uint8_t Presence = 0;
+
 	while(1)
 	{
-#if USE_DHT_SENSOR == 1
+#if USE_DHT11_SENSOR
 		DHT11Read(&Rh,&RhDec,&Temp,&TempDec,&ChkSum);
 		double currentTemperatureInCelcius = (double)Temp;
+#elif USE_DHT22_SENSOR
+
+		DHT22_Start();
+		Presence = DHT22_Check_Response();
+		Rh_byte1 = DHT22_Read();
+		Rh_byte2 = DHT22_Read();
+		Temp_byte1 = DHT22_Read();
+		Temp_byte2 = DHT22_Read();
+
+		temperatureU16 = (Temp_byte1 << 8) | Temp_byte2;
+
+		double currentTemperatureInCelcius = temperatureU16 / 10.0;
 #else
 		double currentTemperatureInCelcius = bmp280_get_float_temp();
 #endif
@@ -111,11 +130,12 @@ int main(void)
 	USB_Init_Function();
     __enable_irq();
 
-#if USE_DHT_SENSOR == 1
+#if USE_DHT22_SENSOR || USE_DHT11_SENSOR
 	DHT11initTIM2();
 #else
-	    bmp280_init();
+	bmp280_init();
 #endif
+
     custom_pwm_init();
     temperatureQueue = xQueueCreate(1, sizeof(double));
 

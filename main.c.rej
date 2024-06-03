@@ -1,15 +1,9 @@
 diff a/main.c b/main.c	(rejected hunks)
-@@ -65,9 +65,11 @@
- 
- int main(void)
+@@ -155,6 +155,7 @@
+ void init_gpio()
  {
--	double T_st = 50;
-+	double T_st = 40;
- 	double x = 0.0;
--	double  Error = 0.0;
-+	double Error = 0.0;
-+//	double dt = 40;
-+//	double Kp = 4000; //4000 - ���������
- 	double dt = 40;
- 	double Kp = 4000; //4000 - ���������
+ 	RCC_AHBPeriphClockCmd(START_MEASUREMENT_INPUT_PORT_RCC, ENABLE);
++	//RCC_AHBPeriphClockCmd(OUTPUT_SIGNAL_OUTPUT_RCC, ENABLE);
  
+ 	GPIO_InitTypeDef gpioStruct;
+ 	// ������� ������

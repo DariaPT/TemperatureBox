@@ -31,6 +31,19 @@
 #include "bme280.h"
 #endif
 
+#define START_MEASUREMENT_INPUT_PORT_RCC RCC_APB2Periph_GPIOA
+#define START_MEASUREMENT_INPUT_PORT GPIOA
+#define START_MEASUREMENT_INPUT_PIN GPIO_Pin_0
+
+#define VALVES_OUTPUT_PORT GPIOA
+#define VALVES_OUTPUT_PIN GPIO_Pin_1
+
+#define PUMP_OUTPUT_PORT GPIOA
+#define PUMP_OUTPUT_PIN GPIO_Pin_2
+
+#define OUTPUT_SIGNAL_OUTPUT_PORT GPIOA
+#define OUTPUT_SIGNAL_OUTPUT_PIN GPIO_Pin_2
+
 
 ADC_InitTypeDef ADC_InitStructure;
 GPIO_InitTypeDef InitStruct;
@@ -56,6 +69,20 @@ void USB_Init_Function()
     Set_USBClock();
     USB_Interrupts_Config();
     USB_Init();
+}
+
+void MainTask(void *pvParameters)
+{
+
+	while(1)
+	{
+		if(GPIO_ReadInputDataBit(START_MEASUREMENT_INPUT_PORT, START_MEASUREMENT_INPUT_PIN) == 1)
+		{
+			// Запустить измерение
+			send_bytes_array_to_usb("READY TO MEASURE\r\n", sizeof("READY TO MEASURE"));
+		}
+		vTaskDelay(100);
+	}
 }
 
 void TaskSensorPoller(void *pvParameters)
@@ -125,6 +152,40 @@ void PidRegulator(void *pvParameters)
 	}
 }
 
+void init_gpio()
+{
+	RCC_AHBPeriphClockCmd(START_MEASUREMENT_INPUT_PORT_RCC, ENABLE);
+
+	GPIO_InitTypeDef gpioStruct;
+	// Входной сигнал
+	gpioStruct.GPIO_Mode = GPIO_Mode_IPD;
+	gpioStruct.GPIO_Pin = START_MEASUREMENT_INPUT_PIN;
+	gpioStruct.GPIO_Speed = GPIO_Speed_50MHz;
+
+	GPIO_Init(START_MEASUREMENT_INPUT_PORT, &gpioStruct);
+
+	// Клапаны
+	gpioStruct.GPIO_Mode = GPIO_Mode_Out_PP;
+	gpioStruct.GPIO_Pin = VALVES_OUTPUT_PIN;
+	gpioStruct.GPIO_Speed = GPIO_Speed_50MHz;
+
+	GPIO_Init(VALVES_OUTPUT_PORT, &gpioStruct);
+
+	// Насос
+	gpioStruct.GPIO_Mode = GPIO_Mode_Out_PP;
+	gpioStruct.GPIO_Pin = PUMP_OUTPUT_PIN;
+	gpioStruct.GPIO_Speed = GPIO_Speed_50MHz;
+
+	GPIO_Init(PUMP_OUTPUT_PORT, &gpioStruct);
+
+	// Выходной сигнал
+	gpioStruct.GPIO_Mode = GPIO_Mode_Out_PP;
+	gpioStruct.GPIO_Pin = OUTPUT_SIGNAL_OUTPUT_PIN;
+	gpioStruct.GPIO_Speed = GPIO_Speed_50MHz;
+
+	GPIO_Init(OUTPUT_SIGNAL_OUTPUT_PORT, &gpioStruct);
+}
+
 int main(void)
 {
 	USB_Init_Function();
@@ -138,6 +199,16 @@ int main(void)
 
     custom_pwm_init();
     temperatureQueue = xQueueCreate(1, sizeof(double));
+
+    init_gpio();
+
+    xTaskCreate(
+    		MainTask,
+    		(signed char *) "MainTask",
+    		configMINIMAL_STACK_SIZE,
+    		NULL,
+    		2,
+    		(TaskHandle_t *)NULL);
 
     xTaskCreate(
     		TaskSensorPoller,
@@ -153,6 +224,7 @@ int main(void)
     		NULL,
     		2,
     		(TaskHandle_t *)NULL);
+
     vTaskStartScheduler();
 
     while (1)

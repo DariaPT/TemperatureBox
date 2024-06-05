@@ -117,7 +117,7 @@ void TaskSensorPoller(void *pvParameters)
 {
 	u8 Rh,RhDec,Temp,TempDec,ChkSum;
 
-	uint8_t Rh_byte1, Rh_byte2, Temp_byte1, Temp_byte2;
+	int16_t Rh_byte1, Rh_byte2, Temp_byte1, Temp_byte2;
 
 	uint16_t temperatureU16;
 	uint8_t Presence = 0;
@@ -140,7 +140,13 @@ void TaskSensorPoller(void *pvParameters)
 			Temp_byte1 = DHT22_Read();
 			Temp_byte2 = DHT22_Read();
 
-			temperatureU16 = (Temp_byte1 << 8) | Temp_byte2;
+			if(Presence == -1 || Rh_byte1 == -1 ||
+					Rh_byte2 == -1 || Temp_byte1 == -1 || Temp_byte2 == -1)
+			{
+				continue;
+			}
+
+			temperatureU16 = ((uint8_t)Temp_byte1 << 8) | (uint8_t)Temp_byte2;
 
 			double currentTemperatureInCelcius = temperatureU16 / 10.0;
 #else

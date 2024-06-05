@@ -26,8 +26,8 @@ void DHT11initGPIOasInput(void);
 void DHT11initGPIOasOutput(void);
 void DHT11initTIM2(void);
 
-uint8_t DHT22_Check_Response (void);
-uint8_t DHT22_Read (void);
+int16_t DHT22_Check_Response (void);
+int16_t DHT22_Read (void);
 void DHT22_Start (void);
 
 

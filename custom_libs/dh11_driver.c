@@ -11,6 +11,8 @@
 #include "dh11_driver.h"
 #include "math.h"
 
+#include "stdbool.h"
+
 #define GPIO_PORT	GPIOA
 #define GPIO_PIN	GPIO_Pin_5
 #define GPIO_RCC	RCC_APB2Periph_GPIOA
@@ -53,7 +55,6 @@ void DHT11initGPIOasInput(void){
 
 }
 
-
 void DHT11_delay_us(int us){
 
 	TIM2->CNT = 0;
@@ -86,12 +87,29 @@ double dewPointFast(double celsius, double humidity)
       return  (b * temp) / (a - temp);;
 }
 
-uint8_t DHT22_Check_Response (void)
+
+bool wait_for_pin_to_go_to_level(GPIO_TypeDef* gpioX, uint16_t gpioPin, bool desiredValue, uint16_t timeoutUs)
+{
+	TIM2->CNT = 0;
+	while (GPIO_ReadInputDataBit(gpioX,gpioPin) != desiredValue)   // wait for the pin to go low. Wait for 80 us
+	{
+		uint16_t timCnt = TIM2->CNT;
+		if(timCnt >= timeoutUs)
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+
+int16_t DHT22_Check_Response (void)
 {
 	DHT11initGPIOasInput();   // set as input
 
 	uint8_t Response = 0;
 	DHT11_delay_us(40);  // wait for 40us
+
 	if (!GPIO_ReadInputDataBit(GPIO_PORT,GPIO_PIN)) // if the pin is low
 	{
 		DHT11_delay_us(80);   // wait for 80us
@@ -100,24 +118,35 @@ uint8_t DHT22_Check_Response (void)
 		else Response = -1;
 	}
 
-	while (GPIO_ReadInputDataBit(GPIO_PORT,GPIO_PIN));   // wait for the pin to go low
+	if(!wait_for_pin_to_go_to_level(GPIO_PORT, GPIO_PIN, false, 80))
+		return -1;
+
 	return Response;
 }
 
-uint8_t DHT22_Read (void)
+int16_t DHT22_Read (void)
 {
 	uint8_t i,j;
 	for (j=0;j<8;j++)
 	{
-		while (!GPIO_ReadInputDataBit(GPIO_PORT,GPIO_PIN));   // wait for the pin to go high
+		// 50
+		if(!wait_for_pin_to_go_to_level(GPIO_PORT, GPIO_PIN, true, 60))
+			return -1;
+
 		DHT11_delay_us(40);   // wait for 40 us
 
 		if (!GPIO_ReadInputDataBit(GPIO_PORT,GPIO_PIN))   // if the pin is low
 		{
-			i&= ~(1<<(7-j));   // write 0
+			i &= ~(1<<(7-j));   // write 0
 		}
-		else i|= (1<<(7-j));  // if the pin is high, write 1
-		while (GPIO_ReadInputDataBit(GPIO_PORT,GPIO_PIN));  // wait for the pin to go low
+		else
+		{
+			i |= (1<<(7-j));  // if the pin is high, write 1
+		}
+
+		// wait for 70-40 = 30
+		if(!wait_for_pin_to_go_to_level(GPIO_PORT, GPIO_PIN, false, 40))
+			return -1;
 	}
 
 	return i;
@@ -158,12 +187,13 @@ void DHT11Read(u8 *Rh,u8 *RhDec,u8 *Temp,u8 *TempDec, u8 *ChkSum)
 	for (j = 0; j < 5; ++j) {//5*8 toplam 40 bit Rh,rhdec,temp,tempdec,chksum
 		for (i = 0; i < 8; ++i) {
 
-			while(!GPIO_ReadInputDataBit(GPIO_PORT,GPIO_PIN)){} //0 olan boþ geçiliyor
+			// 50 us
+			while(!GPIO_ReadInputDataBit(GPIO_PORT,GPIO_PIN)){} //0 olan boÑŽ geÐ·iliyor
 
-			TIM_SetCounter(TIM2,0);//Sayýcýyý Sýfýrla
+			TIM_SetCounter(TIM2,0);//SayÑcÑyÑ SÑfÑrla
 			while(GPIO_ReadInputDataBit(GPIO_PORT,GPIO_PIN)){}
 
-				temp=TIM_GetCounter(TIM2);//sayýcý deðerini al (böylelikle zaman hesaplanýyor)
+				temp=TIM_GetCounter(TIM2);//sayÑcÑ deÑ€erini al (bÑ†ylelikle zaman hesaplanÑyor)
 
 			if (temp<30) {
 				Value[j]=Value[j]<<1;

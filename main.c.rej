@@ -1,9 +1,10 @@
 diff a/main.c b/main.c	(rejected hunks)
-@@ -155,6 +155,7 @@
- void init_gpio()
- {
- 	RCC_AHBPeriphClockCmd(START_MEASUREMENT_INPUT_PORT_RCC, ENABLE);
-+	//RCC_AHBPeriphClockCmd(OUTPUT_SIGNAL_OUTPUT_RCC, ENABLE);
+@@ -194,7 +194,7 @@
+ 			uint16_t currentTemperatureInCelciusX100 = newTemperatureInCelcius * 100;
+ 			send_bytes_array_to_usb((uint8_t*)&currentTemperatureInCelciusX100, 2);
  
- 	GPIO_InitTypeDef gpioStruct;
- 	// ������� ������
+-			if(newTemperatureInCelcius >= 50)
++			if(newTemperatureInCelcius >= 27)
+ 			{
+ 				CUSTOM_PWM_SET_NEW_VALUE(0); // ��������� ������.
+ 

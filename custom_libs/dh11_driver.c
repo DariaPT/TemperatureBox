@@ -61,33 +61,6 @@ void DHT11_delay_us(int us){
 	while((TIM2->CNT) <= us);
 }
 
-float Fahrenheit(u8 celsius)
-{
-        return 1.8 * celsius + 32;
-}
-
-u32 get_timer_cnt()
-{
-	return TIM2->CNT;
-}
-
-float Kelvin(u8 celsius)
-{
-        return celsius + 273.15;
-}
-
-double dewPointFast(double celsius, double humidity)
-{
-      double a = 17.271,
-             b = 237.7,
-             temp ;
-
-      temp = (a * celsius) / (b + celsius) + log(humidity/100);
-
-      return  (b * temp) / (a - temp);;
-}
-
-
 bool wait_for_pin_to_go_to_level(GPIO_TypeDef* gpioX, uint16_t gpioPin, bool desiredValue, uint16_t timeoutUs)
 {
 	TIM2->CNT = 0;
@@ -161,52 +134,4 @@ void DHT22_Start (void)
 	DHT11_delay_us(20);   // wait for 30us
 
 	DHT11initGPIOasInput();   // set as input
-}
-
-void DHT11Read(u8 *Rh,u8 *RhDec,u8 *Temp,u8 *TempDec, u8 *ChkSum)
-{
-	u8 temp;
-	u8 j;
-	u8 i;
-	u8 Value[5]={0x00,0x00,0x00,0x00,0x00};
-
-	DHT11initGPIOasOutput();
-	GPIO_ResetBits(GPIO_PORT,GPIO_PIN);
-	DHT11_delay_us(18000);
-	GPIO_SetBits(GPIO_PORT,GPIO_PIN);
-	DHT11_delay_us(40);
-	DHT11initGPIOasInput();
-
-	//80us lik presence										//
-	while(!GPIO_ReadInputDataBit(GPIO_PORT,GPIO_PIN)){}		//52us 0 level
-															//dht11 response and start to send signal 0-1
-	while(GPIO_ReadInputDataBit(GPIO_PORT,GPIO_PIN)){}			//80us 1 level
-															//
-
-
-	for (j = 0; j < 5; ++j) {//5*8 toplam 40 bit Rh,rhdec,temp,tempdec,chksum
-		for (i = 0; i < 8; ++i) {
-
-			// 50 us
-			while(!GPIO_ReadInputDataBit(GPIO_PORT,GPIO_PIN)){} //0 olan boю geзiliyor
-
-			TIM_SetCounter(TIM2,0);//Sayэcэyэ Sэfэrla
-			while(GPIO_ReadInputDataBit(GPIO_PORT,GPIO_PIN)){}
-
-				temp=TIM_GetCounter(TIM2);//sayэcэ deрerini al (bцylelikle zaman hesaplanэyor)
-
-			if (temp<30) {
-				Value[j]=Value[j]<<1;
-				}
-			else {
-				Value[j]=Value[j]<<1;
-				Value[j] =Value[j]+1;
-				}
-		}
-	}
-	*Rh=Value[0];
-	*RhDec=Value[1];
-	*Temp=Value[2];
-	*TempDec=Value[3];
-	*ChkSum=Value[4];
 }

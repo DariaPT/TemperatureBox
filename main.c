@@ -24,14 +24,7 @@
 
 #include "custom_pwm.h"
 
-#define USE_DHT22_SENSOR 1
-#define USE_DHT11_SENSOR 0
-
-#if USE_DHT22_SENSOR == 1 || USE_DHT11_SENSOR == 1
 #include "dh11_driver.h"
-#else
-#include "bme280.h"
-#endif
 
 #define PUMP_WORK_TIME_MS 15000
 
@@ -127,12 +120,6 @@ void TaskSensorPoller(void *pvParameters)
 		if(isReadyToHeat)
 		{
 			//xSemaphoreTake(readyToMeasureSemaphoreHandle, portMAX_DELAY);
-
-#if USE_DHT11_SENSOR
-			DHT11Read(&Rh,&RhDec,&Temp,&TempDec,&ChkSum);
-			double currentTemperatureInCelcius = (double)Temp;
-#elif USE_DHT22_SENSOR
-
 			DHT22_Start();
 			Presence = DHT22_Check_Response();
 			Rh_byte1 = DHT22_Read();
@@ -149,10 +136,6 @@ void TaskSensorPoller(void *pvParameters)
 			temperatureU16 = ((uint8_t)Temp_byte1 << 8) | (uint8_t)Temp_byte2;
 
 			double currentTemperatureInCelcius = temperatureU16 / 10.0;
-#else
-			double currentTemperatureInCelcius = bmp280_get_float_temp();
-#endif
-
 
 			xQueueSendToBack(temperatureQueue, (void *)&currentTemperatureInCelcius, 0);
 		}
@@ -253,11 +236,7 @@ int main(void)
 	USB_Init_Function();
     __enable_irq();
 
-#if USE_DHT22_SENSOR || USE_DHT11_SENSOR
 	DHT11initTIM2();
-#else
-	bmp280_init();
-#endif
 
 
     custom_pwm_init();

@@ -17,18 +17,6 @@
 #include "stdio.h"
 #include "math.h"
 
-void DHT11Read(u8 *Rh,u8 *RhDec,u8 *Temp,u8 *TempDec, u8 *ChkSum);
-float Fahrenheit(u8 celsius);
-float Kelvin(u8 celsius);
-double dewPointFast(double celsius, double humidity);
-void DHT11_delay_us(int us);
-void DHT11initGPIOasInput(void);
-void DHT11initGPIOasOutput(void);
-void DHT11initTIM2(void);
-
 int16_t DHT22_Check_Response (void);
 int16_t DHT22_Read (void);
 void DHT22_Start (void);
-
-
-u32 get_timer_cnt();

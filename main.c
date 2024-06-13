@@ -115,6 +115,8 @@ void TaskSensorPoller(void *pvParameters)
 	int16_t Rh_byte1, Rh_byte2, Temp_byte1, Temp_byte2;
 
 	uint16_t temperatureU16;
+	// int16_t temperatureU16;
+
 	uint8_t Presence = 0;
 
 	while(1)
@@ -136,6 +138,7 @@ void TaskSensorPoller(void *pvParameters)
 			}
 
 			temperatureU16 = ((uint8_t)Temp_byte1 << 8) | (uint8_t)Temp_byte2;
+			//temperatureU16 = (int16_t)(((uint8_t)Temp_byte1 << 8) | (uint8_t)Temp_byte2);
 
 			double currentTemperatureInCelcius = temperatureU16 / 10.0;
 

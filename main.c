@@ -27,6 +27,8 @@
 #include "dh11_driver.h"
 
 #define PUMP_WORK_TIME_MS 15000
+#define OUTPUT_STOP_SIGNAL_HOLDING_TIME_MS 30000
+#define NEEDED_TEMPERATURE_IN_CELC 55
 
 #define START_MEASUREMENT_INPUT_PORT_RCC RCC_APB2Periph_GPIOB
 #define START_MEASUREMENT_INPUT_PORT GPIOB
@@ -177,13 +179,13 @@ void PidRegulator(void *pvParameters)
 			uint16_t currentTemperatureInCelciusX100 = newTemperatureInCelcius * 100;
 			send_bytes_array_to_usb((uint8_t*)&currentTemperatureInCelciusX100, 2);
 
-			if(newTemperatureInCelcius >= 50)
+			if(newTemperatureInCelcius >= NEEDED_TEMPERATURE_IN_CELC)
 			{
 				CUSTOM_PWM_SET_NEW_VALUE(0); // Отключаем нагрев.
 
 				SET_OUTPUT_SIGNAL();
 
-				vTaskDelay(30000);
+				vTaskDelay(OUTPUT_STOP_SIGNAL_HOLDING_TIME_MS);
 
 				RESET_OUTPUT_SIGNAL();
 

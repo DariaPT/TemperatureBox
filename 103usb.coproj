@@ -38,7 +38,7 @@
           <Memory name="IROM2" type="ReadOnly" size="" startValue=""/>
           <Memory name="IRAM2" type="ReadWrite" size="" startValue=""/>
         </MemoryAreas>
-        <LocateLinkFile path="c:/coocox/coide/configuration/programdata/103usb/link.ld" type="0"/>
+        <LocateLinkFile path="d:/coocox/coide/configuration/programdata/103usb/link.ld" type="0"/>
       </Link>
       <Output>
         <Option name="OutputFileType" value="0"/>
@@ -119,6 +119,7 @@
     <File name="stm_lib/inc/stm32f10x_usart.h" path="stm_lib/inc/stm32f10x_usart.h" type="1"/>
     <File name="FreeRTOS/Include/message_buffer.h" path="FreeRTOS/Include/message_buffer.h" type="1"/>
     <File name="stm_lib/inc/stm32f10x_conf.h" path="stm_lib/inc/stm32f10x_conf.h" type="1"/>
+    <File name="custom_libs/pid_coefficients_manager.c" path="custom_libs/pid_coefficients_manager.c" type="1"/>
     <File name="stm_lib/inc/usb_def.h" path="stm_lib/inc/usb_def.h" type="1"/>
     <File name="stm_lib/inc/misc.h" path="stm_lib/inc/misc.h" type="1"/>
     <File name="cmsis/core_cmInstr.h" path="cmsis/core_cmInstr.h" type="1"/>
@@ -134,6 +135,7 @@
     <File name="stm_lib/inc/stm32f10x_exti.h" path="stm_lib/inc/stm32f10x_exti.h" type="1"/>
     <File name="custom_libs/dh11_driver.c" path="custom_libs/dh11_driver.c" type="1"/>
     <File name="stm_lib/inc/stm32f10x_adc.h" path="stm_lib/inc/stm32f10x_adc.h" type="1"/>
+    <File name="custom_libs/pid_coefficients_manager.h" path="custom_libs/pid_coefficients_manager.h" type="1"/>
     <File name="cmsis_boot/system_stm32f10x.h" path="cmsis_boot/system_stm32f10x.h" type="1"/>
     <File name="stm_lib/src/hw_config.c" path="stm_lib/src/hw_config.c" type="1"/>
     <File name="FreeRTOS/Include/stream_buffer.h" path="FreeRTOS/Include/stream_buffer.h" type="1"/>
@@ -163,18 +165,18 @@
     <File name="FreeRTOS/Portable/port.c" path="FreeRTOS/Portable/port.c" type="1"/>
     <File name="FreeRTOS/Include" path="" type="2"/>
     <File name="stm_lib/inc/usb_mem.h" path="stm_lib/inc/usb_mem.h" type="1"/>
-    <File name="FreeRTOS/Include/FreeRTOSConfig.h" path="FreeRTOS/Include/FreeRTOSConfig.h" type="1"/>
     <File name="stm_lib/inc/platform_config.h" path="stm_lib/inc/platform_config.h" type="1"/>
     <File name="stm_lib/inc/usb_core.h" path="stm_lib/inc/usb_core.h" type="1"/>
+    <File name="FreeRTOS/Include/FreeRTOSConfig.h" path="FreeRTOS/Include/FreeRTOSConfig.h" type="1"/>
     <File name="stm_lib/inc/usb_type.h" path="stm_lib/inc/usb_type.h" type="1"/>
     <File name="FreeRTOS/Include/stack_macros.h" path="FreeRTOS/Include/stack_macros.h" type="1"/>
     <File name="stm_lib/inc/stm32_eval_legacy.h" path="stm_lib/inc/stm32_eval_legacy.h" type="1"/>
     <File name="stm_lib/src/system_stm32f10x.c" path="stm_lib/src/system_stm32f10x.c" type="1"/>
     <File name="stm_lib/src/stm32f10x_usart.c" path="stm_lib/src/stm32f10x_usart.c" type="1"/>
-    <File name="FreeRTOS/Include/StackMacros.h" path="FreeRTOS/Include/StackMacros.h" type="1"/>
     <File name="custom_libs/custom_pwm.c" path="custom_libs/custom_pwm.c" type="1"/>
-    <File name="FreeRTOS/Source" path="" type="2"/>
     <File name="stm_lib/src/stm32f10x_pwr.c" path="stm_lib/src/stm32f10x_pwr.c" type="1"/>
+    <File name="FreeRTOS/Source" path="" type="2"/>
+    <File name="FreeRTOS/Include/StackMacros.h" path="FreeRTOS/Include/StackMacros.h" type="1"/>
     <File name="stm_lib/inc/stm32f10x_gpio.h" path="stm_lib/inc/stm32f10x_gpio.h" type="1"/>
     <File name="FreeRTOS/Include/event_groups.h" path="FreeRTOS/Include/event_groups.h" type="1"/>
     <File name="FreeRTOS/Include/task.h" path="FreeRTOS/Include/task.h" type="1"/>

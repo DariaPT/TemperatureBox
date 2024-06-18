@@ -35,6 +35,8 @@
 #include "usb_pwr.h"
 #include "stm32f10x_tim.h"
 #include "stm32f10x_gpio.h"
+#include "custom_libs/pid_coefficients_manager.h"
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 TIM_TimeBaseInitTypeDef timer;
@@ -103,9 +105,14 @@ void EP1_IN_Callback (void)
 *******************************************************************************/
 void EP3_OUT_Callback(void)
 {
-//    uint16_t USB_Rx_Cnt;
-//    USB_Rx_Cnt = USB_SIL_Read(EP3_OUT, USB_Rx_Buffer);
-  	state = USB_Rx_Buffer[0];
+    uint16_t USB_Rx_Cnt;
+    USB_Rx_Cnt = USB_SIL_Read(EP3_OUT, USB_Rx_Buffer);
+
+    if(USB_Rx_Cnt == sizeof(struct PidCoefficients))
+    {
+    	callback_on_new_raw_coef_received(USB_Rx_Buffer);
+    }
+  	state = 0;
   	if(state == 0)
 	{
 		TIM_Cmd(TIM2, DISABLE);

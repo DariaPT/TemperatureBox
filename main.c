@@ -25,6 +25,7 @@
 #include "custom_pwm.h"
 
 #include "dh11_driver.h"
+#include "pid_coefficients_manager.h"
 
 #define PUMP_WORK_TIME_MS 15000
 #define OUTPUT_STOP_SIGNAL_HOLDING_TIME_MS 30000
@@ -55,9 +56,14 @@
 ADC_InitTypeDef ADC_InitStructure;
 GPIO_InitTypeDef InitStruct;
 xQueueHandle temperatureQueue;
+xQueueHandle pidCoefficientsQueue;
 
 xSemaphoreHandle readyToMeasureSemaphoreHandle;
 
+void send_new_pid_coeffs(struct PidCoefficients *pidCoefs)
+{
+	xQueueSendToBack(pidCoefficientsQueue, (void *)pidCoefs, 0);
+}
 volatile bool isReadyToHeat = false;
 
 void _delay_ms(uint32_t t)
@@ -86,8 +92,15 @@ void MainTask(void *pvParameters)
 {
 	bool isMeasurementStarted = false;
 	isReadyToHeat = false;
+	struct PidCoefficients pidCoeffs = { 0 };
 	while(1)
 	{
+		if(xQueueReceive(pidCoefficientsQueue, (void*)&pidCoeffs, 100))
+		{
+			pidCoeffs.P = 0;
+			pidCoeffs.I = 0;
+			pidCoeffs.D = 0;
+		}
 		if(!isReadyToHeat && GPIO_ReadInputDataBit(START_MEASUREMENT_INPUT_PORT, START_MEASUREMENT_INPUT_PIN) == 1)
 		{
 			// Запустить измерение
@@ -104,7 +117,6 @@ void MainTask(void *pvParameters)
 			isReadyToHeat = true;
 			//xSemaphoreGive(readyToMeasureSemaphoreHandle);
 		}
-		vTaskDelay(100);
 	}
 }
 
@@ -244,9 +256,9 @@ int main(void)
 
 	DHT11initTIM2();
 
-
     custom_pwm_init();
     temperatureQueue = xQueueCreate(1, sizeof(double));
+    pidCoefficientsQueue = xQueueCreate(1, sizeof(struct PidCoefficients));
 
     init_gpio();
 

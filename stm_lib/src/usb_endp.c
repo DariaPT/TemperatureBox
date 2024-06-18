@@ -112,24 +112,24 @@ void EP3_OUT_Callback(void)
     {
     	callback_on_new_raw_coef_received(USB_Rx_Buffer);
     }
-  	state = 0;
-  	if(state == 0)
-	{
-		TIM_Cmd(TIM2, DISABLE);
-	}
-  	else if(state == 1)
-	{
-		RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
-		TIM_ITConfig(TIM2, TIM_IT_Update, DISABLE);
-		TIM_Cmd(TIM2, DISABLE);
-		TIM_TimeBaseStructInit(&timer);
-		timer.TIM_Prescaler = 36000;
-		timer.TIM_Period = 200;
-		TIM_TimeBaseInit(TIM2, &timer);
-		TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
-		TIM_Cmd(TIM2, ENABLE);
-		NVIC_EnableIRQ(TIM2_IRQn);
-	}
+//  	state = 0;
+//  	if(state == 0)
+//	{
+//		TIM_Cmd(TIM2, DISABLE);
+//	}
+//  	else if(state == 1)
+//	{
+//		RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+//		TIM_ITConfig(TIM2, TIM_IT_Update, DISABLE);
+//		TIM_Cmd(TIM2, DISABLE);
+//		TIM_TimeBaseStructInit(&timer);
+//		timer.TIM_Prescaler = 36000;
+//		timer.TIM_Period = 200;
+//		TIM_TimeBaseInit(TIM2, &timer);
+//		TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
+//		TIM_Cmd(TIM2, ENABLE);
+//		NVIC_EnableIRQ(TIM2_IRQn);
+//	}
   	SetEPRxValid(ENDP3);
 }
 

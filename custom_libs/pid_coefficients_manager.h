@@ -13,9 +13,10 @@
 
 struct PidCoefficients
 {
-	u16 P;
-	u16 I;
-	u16 D;
+	float P;
+	float I;
+	float D;
+	float T_st;
 }
 __attribute__((packed));
 

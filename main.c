@@ -59,6 +59,12 @@ xQueueHandle temperatureQueue;
 xQueueHandle pidCoefficientsQueue;
 
 xSemaphoreHandle readyToMeasureSemaphoreHandle;
+xSemaphoreHandle pidRegCoefficientChangeSemaphoreHandle;
+
+volatile float Kp = 105; // 108 XENM PF[JLBN
+volatile float Kd = 0;
+volatile float Ki = 0.2;
+volatile float T_st = 50;
 
 void send_new_pid_coeffs(struct PidCoefficients *pidCoefs)
 {
@@ -97,9 +103,14 @@ void MainTask(void *pvParameters)
 	{
 		if(xQueueReceive(pidCoefficientsQueue, (void*)&pidCoeffs, 100))
 		{
-			pidCoeffs.P = 0;
-			pidCoeffs.I = 0;
-			pidCoeffs.D = 0;
+			xSemaphoreTake(pidRegCoefficientChangeSemaphoreHandle, portMAX_DELAY);
+
+			Kp = pidCoeffs.P; // 108 XENM PF[JLBN
+			Kd = pidCoeffs.D;
+			Ki = pidCoeffs.I;
+			T_st = pidCoeffs.T_st;
+
+			xSemaphoreGive(pidRegCoefficientChangeSemaphoreHandle);
 		}
 		if(!isReadyToHeat && GPIO_ReadInputDataBit(START_MEASUREMENT_INPUT_PORT, START_MEASUREMENT_INPUT_PIN) == 1)
 		{
@@ -163,26 +174,35 @@ void TaskSensorPoller(void *pvParameters)
 
 void PidRegulator(void *pvParameters)
 {
-	const double T_st = 50;
-	const double Kp = 105; // 108 XENM PF[JLBN
-	const double Kd = 0;
-	const double Ki = 0.2;
-	double I_prev = 0;
-	double prevError = 0;
 
+
+	float I_prev = 0;
+	float prevError = 0;
+	volatile float localKp = 105; // 108 XENM PF[JLBN
+	volatile float localKd = 0;
+	volatile float localKi = 0.2;
+	volatile float localT_st = 50;
 
 	while(1)
 	{
 		double newTemperatureInCelcius = 0;
 		xQueueReceive(temperatureQueue, &newTemperatureInCelcius, portMAX_DELAY );
 
+
+		xSemaphoreTake(pidRegCoefficientChangeSemaphoreHandle, portMAX_DELAY);
+		localKp = Kp; // 108 XENM PF[JLBN
+		localKd = Kd;
+		localKi = Ki;
+		localT_st = T_st;
+		xSemaphoreGive(pidRegCoefficientChangeSemaphoreHandle);
+
 		if(isReadyToHeat)
 		{
-			double currentError = T_st - newTemperatureInCelcius;
-			double P_part = Kp * currentError;
-			double I_part = I_prev + Ki * currentError;
-			double D_part = Kd * (currentError - prevError);
-			double newPwmValue = P_part + I_part + D_part;
+			float currentError = localT_st - newTemperatureInCelcius;
+			float P_part = localKp * currentError;
+			float I_part = I_prev + localKi * currentError;
+			float D_part = localKd * (currentError - prevError);
+			float newPwmValue = P_part + I_part + D_part;
 
 			if (newPwmValue < 0) newPwmValue = 0;
 			if (newPwmValue > 200) newPwmValue = 199;
@@ -263,6 +283,7 @@ int main(void)
     init_gpio();
 
     vSemaphoreCreateBinary(readyToMeasureSemaphoreHandle);
+    vSemaphoreCreateBinary(pidRegCoefficientChangeSemaphoreHandle);
 
     xTaskCreate(
     		MainTask,

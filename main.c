@@ -30,6 +30,7 @@
 #define PUMP_WORK_TIME_MS 15000
 #define OUTPUT_STOP_SIGNAL_HOLDING_TIME_MS 30000
 #define NEEDED_TEMPERATURE_IN_CELC 55
+#define TEMPERATURE_MAX_DELTA_IN_CELC 5
 
 #define START_MEASUREMENT_INPUT_PORT_RCC RCC_APB2Periph_GPIOB
 #define START_MEASUREMENT_INPUT_PORT GPIOB
@@ -142,6 +143,8 @@ void TaskSensorPoller(void *pvParameters)
 
 	uint8_t Presence = 0;
 
+	double prevTemperature = -300.0;
+
 	while(1)
 	{
 		if(isReadyToHeat)
@@ -164,6 +167,11 @@ void TaskSensorPoller(void *pvParameters)
 			//temperatureU16 = (int16_t)(((uint8_t)Temp_byte1 << 8) | (uint8_t)Temp_byte2);
 
 			double currentTemperatureInCelcius = temperatureU16 / 10.0;
+			if(prevTemperature != -300.0 && fabs(prevTemperature - currentTemperatureInCelcius) > TEMPERATURE_MAX_DELTA_IN_CELC)
+			{
+				continue;
+			}
+			prevTemperature = currentTemperatureInCelcius;
 
 			xQueueSendToBack(temperatureQueue, (void *)&currentTemperatureInCelcius, 0);
 		}

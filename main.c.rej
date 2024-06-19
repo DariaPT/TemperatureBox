@@ -1,10 +1,10 @@
 diff a/main.c b/main.c	(rejected hunks)
-@@ -194,7 +194,7 @@
+@@ -222,7 +222,7 @@
  			uint16_t currentTemperatureInCelciusX100 = newTemperatureInCelcius * 100;
  			send_bytes_array_to_usb((uint8_t*)&currentTemperatureInCelciusX100, 2);
  
--			if(newTemperatureInCelcius >= 50)
-+			if(newTemperatureInCelcius >= 27)
+-			if(newTemperatureInCelcius >= NEEDED_TEMPERATURE_IN_CELC)
++			if(false)
  			{
  				CUSTOM_PWM_SET_NEW_VALUE(0); // ��������� ������.
  
